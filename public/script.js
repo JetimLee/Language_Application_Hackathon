@@ -139,13 +139,14 @@ const checkAnswer = (string) => {
 	if (string == currentCard.translation) {
 		userWords[index].times_right++;
 		console.log(sessionWords);
+		let sessionWordsIndex = sessionWords.findIndex(a => a.word_id == currentCard.word_id);
+		sessionWords.splice(sessionWordsIndex,1);
 		displayResult(true);
 	} else {
 		userWords[index].times_wrong++;
 		displayResult(false);
 	}
 	quizzedWords.push(userWords[index].word_id);
-	console.log(quizzedWords);
 }
 
 const submitAnswer = (event) => {
@@ -161,6 +162,16 @@ const getLanguageName = (id) => {
 	return capitalize(language);
 }
 
+const appendSkipButton = () => {
+	let div = document.createElement("div");
+	div.id = "result";
+	let button = document.createElement("button");
+	button.textContent = "Skip";
+	button.addEventListener("click",setCurrentCard)
+	div.appendChild(button);
+	return div;
+}
+
 const showCard = () => {
 	root.innerHTML = "";
 	let card = document.createElement("div");
@@ -172,13 +183,9 @@ const showCard = () => {
 	`;
 	root.appendChild(card);
 
-	let div = document.createElement("div");
-	div.id = "result";
-	let button = document.createElement("button");
-	button.textContent = "Skip";
-	button.addEventListener("click",setCurrentCard)
-	div.appendChild(button);
-	root.appendChild(div);
+	if (sessionWords.length > 1) {
+		root.appendChild(appendSkipButton());		
+	}
 	let answer = document.getElementById("answer");
 	answer.addEventListener("keyup",submitAnswer);
 }

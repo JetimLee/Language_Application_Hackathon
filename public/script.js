@@ -138,6 +138,7 @@ const checkAnswer = (string) => {
 	index = userWords.findIndex(a => a.word_id == currentCard.word_id);
 	if (string == currentCard.translation) {
 		userWords[index].times_right++;
+		console.log(sessionWords);
 		displayResult(true);
 	} else {
 		userWords[index].times_wrong++;
@@ -165,10 +166,9 @@ const showCard = () => {
 	let card = document.createElement("div");
 	card.classList.add("card");
 	let languageName = getLanguageName(currentCard.language_id);
-	// console.log(languageName);
 	card.innerHTML = `
-	<div>${currentCard.word}</div>
-	<div><input id="answer" type="text"></div>
+	<div class="targetLanguage"><span>${languageName}</span>${currentCard.word}</div>
+	<div class="sourceLanguage"><span>English</span><input id="answer" type="text"></div>
 	`;
 	root.appendChild(card);
 

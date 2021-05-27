@@ -5,7 +5,11 @@ html{
 body {
 	margin: 0;
 	padding: 30px 40px;
+}
+
+body, input {
 	font-family: calibri;
+	font-size: 1rem;	
 }
 
 h1 {
@@ -22,13 +26,45 @@ h1 {
 	align-items: center;
     justify-items: center;
     margin: auto;
+    grid-template-columns: 1fr;
+    padding: 1rem;
 }
 
+.card div {
+	width: 100%;
+    text-align: center;
+}
+
+.card span {
+	float: left;
+}
+
+.card div input {
+	text-align: center;
+    margin-top: -2px;
+}
+
+.targetLanguage, .targetLanguage input {
+	color:  blue;
+	border-color: blue;
+}
+
+.sourceLanguage, .sourceLanguage input {
+	color: gray;
+	border-color: gray;
+}
+
+/*.targetLanguage input {
+}
+
+.sourceLanguage input {
+}*/
+
 #answer {
-	border: none;
-	border-bottom: 2px solid blue;
+    border-width: 0 0 2px 0;
 	outline:  0;
 }
+
 
 .startScreen {
 	display: grid;
@@ -51,7 +87,6 @@ select {
 	display: flex;
     justify-content: space-around;
 	align-items: center;
-
 }
 
 

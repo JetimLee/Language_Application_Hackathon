@@ -10,9 +10,22 @@ body {
 
 h1 {
 	margin: 0;
+	text-align: center;
 }
 
 .card {
+	width: 300px;
+	height:  100px;
 	border: 1px solid black;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+    justify-items: center;
+    margin: auto;
 }
 
+#answer {
+	border: none;
+	border-bottom: 2px solid blue;
+	outline:  0;
+}

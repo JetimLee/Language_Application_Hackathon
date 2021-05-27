@@ -22,6 +22,10 @@ let userWords =[
 ]
 
 let root = document.getElementById("root");
+let score;
+let cards;
+let actions;
+let input;
 
 let userLanguagesIds;
 let otherLanguagesIds;
@@ -51,6 +55,12 @@ const reviewOrQuiz = () => {
 
 	// button
 	root.classList.toggle("startScreen");
+	root.classList.toggle("cardScreen");
+	root.innerHTML = `<div id="score"></div><div id="cards"></div><div id="actions"></div>`
+	score = document.getElementById("score");
+	cards = document.getElementById("cards");
+	actions = document.getElementById("actions");
+	showNumbers();
 	setCurrentCard();
 }
 
@@ -102,6 +112,7 @@ let getSessionWords = () => {
 }
 
 let quizzedWords = [];
+let correctAnswers = 0;
 
 let currentCard = {word_id:null};
 
@@ -125,20 +136,22 @@ const generateRandom = () => {
 
 const displayResult = (value) => {
 	let message = value ? "Correct!" : "Wrong answer"
-	let div = document.getElementById("result");
-	div.innerHTML = `<p>${message}</p>`;
-	let button = document.createElement("button");
-	button.textContent = "Next";
-	button.addEventListener("click",setCurrentCard)
-	div.appendChild(button);
-	root.appendChild(div);
+	actions.innerHTML = `<p>${message}</p>`;
+	if (sessionWords.length > 0) {
+		let button = document.createElement("button");
+		button.textContent = "Next";
+		button.addEventListener("click",setCurrentCard)
+		actions.appendChild(button);
+	}
 }
 
 const checkAnswer = (string) => {
 	index = userWords.findIndex(a => a.word_id == currentCard.word_id);
 	if (string == currentCard.translation) {
 		userWords[index].times_right++;
-		console.log(sessionWords);
+		correctAnswers++;
+		let correct = document.getElementById("correct");
+		correct.textContent = correctAnswers;
 		let sessionWordsIndex = sessionWords.findIndex(a => a.word_id == currentCard.word_id);
 		sessionWords.splice(sessionWordsIndex,1);
 		displayResult(true);
@@ -155,7 +168,6 @@ const submitAnswer = (event) => {
 	}
 }
 
-
 const getLanguageName = (id) => {
 	let index = languages.findIndex(a => a.language_id == id);
 	let language = languages[index].language_name;
@@ -163,31 +175,35 @@ const getLanguageName = (id) => {
 }
 
 const appendSkipButton = () => {
-	let div = document.createElement("div");
-	div.id = "result";
 	let button = document.createElement("button");
 	button.textContent = "Skip";
 	button.addEventListener("click",setCurrentCard)
-	div.appendChild(button);
-	return div;
+	actions.appendChild(button);
+}
+
+const showNumbers = () => {
+	let score = document.getElementById("score")
+	let div = document.createElement("div");
+	div.innerHTML = `<span id="correct">${correctAnswers}</span> / <span id="total">${sessionWords.length}</span>`;
+	score.appendChild(div);
 }
 
 const showCard = () => {
-	root.innerHTML = "";
+	cards.innerHTML = "";
 	let card = document.createElement("div");
 	card.classList.add("card");
 	let languageName = getLanguageName(currentCard.language_id);
 	card.innerHTML = `
 	<div class="targetLanguage"><span>${languageName}</span>${currentCard.word}</div>
-	<div class="sourceLanguage"><span>English</span><input id="answer" type="text"></div>
+	<div class="sourceLanguage"><span>English</span><input id="input" type="text"></div>
 	`;
-	root.appendChild(card);
-
+	cards.appendChild(card);
+	actions.innerHTML = "";
 	if (sessionWords.length > 1) {
-		root.appendChild(appendSkipButton());		
+		appendSkipButton();		
 	}
-	let answer = document.getElementById("answer");
-	answer.addEventListener("keyup",submitAnswer);
+	input = document.getElementById("input");
+	input.addEventListener("keyup",submitAnswer);
 }
 
 

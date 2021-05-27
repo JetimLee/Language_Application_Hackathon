@@ -60,7 +60,7 @@ h1 {
 .sourceLanguage input {
 }*/
 
-#answer {
+#input {
     border-width: 0 0 2px 0;
 	outline:  0;
 }
@@ -80,10 +80,20 @@ select {
 	display: block;
 }
 
-#result {
-	height: 100px;
+
+.cardScreen {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 40px;
+	justify-content: center;
+	align-items: center;
+    justify-items: center;
+}
+
+#actions {
+	/*height: 100px;*/
 	width: 300px;
-	margin: auto;
+	/*margin: auto;*/
 	display: flex;
     justify-content: space-around;
 	align-items: center;

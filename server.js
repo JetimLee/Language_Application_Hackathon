@@ -20,7 +20,7 @@ app.post("/register", async (req, resp) => {
     //the method takes what you're encrypting and how many times
     let hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     let newUser = {
-      __id: Date.now(),
+      _id: Date.now(),
       email: req.body.email,
       password: hashedPassword,
     };
@@ -28,22 +28,22 @@ app.post("/register", async (req, resp) => {
     console.log(`list of users ${users}`);
     resp.status(201).send({ data: newUser });
   } else {
-    resp.status
-      .status(400)
-      .send({
-        error: { code: 400, message: `that email address is already in usage` },
-      });
+    resp.status.status(400).send({
+      error: { code: 400, message: `that email address is already in usage` },
+    });
   }
 });
 
 app.post("/login", async (req, res) => {
+  let submittedPass;
+  let savedPass;
   //get the email and password from req.body
   //find the match for the email
   let matchUser = users.find((user) => req.body.email === user.email);
   if (matchUser) {
     //validate the password using bcrypt
-    let submittedPass = req.body.password; //plain text from browser
-    let savedPass = userMatch.password; //that has been hashed
+    submittedPass = req.body.password; //plain text from browser
+    savedPass = matchUser.password; //that has been hashed
     const passwordDidMatch = await bcrypt.compare(submittedPass, savedPass);
     if (passwordDidMatch) {
       res.status(200).send({ data: { token: "this is a fake token" } });
@@ -57,11 +57,9 @@ app.post("/login", async (req, res) => {
     let fakePass = `$je31m${saltRounds}leeisthebestttt`;
     await bcrypt.compare(submittedPass, fakePass);
     //to slow down the process, primarily against hackers
-    res
-      .status(401)
-      .send({
-        error: { code: 401, message: "invalid username and/or password." },
-      });
+    res.status(401).send({
+      error: { code: 401, message: "invalid username and/or password." },
+    });
   }
 });
 

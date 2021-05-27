@@ -41,6 +41,8 @@ function registerSuccess(data) {
   console.log("new user created", data);
   alert("You have been registered");
 }
+console.log(sessionStorage.getItem("myapp_token"));
+console.log(sessionStorage);
 
 function failure(err) {
   alert(err.message);

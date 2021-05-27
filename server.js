@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const port = process.env.API_port || 333;
 const fs = require("fs");
+const path = require("path");
+const passport = require("passport");
 
 //this is all bcrypt stuff
 const bcrypt = require("bcrypt");
@@ -43,8 +45,11 @@ app.post("/register", async (req, resp) => {
   }
 });
 
+let loggedIn = false;
+
 app.post("/login", async (req, res) => {
   //to do - check against the file and not users array in users.js
+  let loggedIn = false;
   let submittedPass;
   let savedPass;
   //get the email and password from req.body
@@ -62,13 +67,24 @@ app.post("/login", async (req, res) => {
         savedPass = matchUser.password; //that has been hashed
         const passwordDidMatch = await bcrypt.compare(submittedPass, savedPass);
         if (passwordDidMatch) {
-          res.status(200).send({ data: { token: "this is a fake token" } });
+          loggedIn = true;
+          console.log("success!");
+
+          res
+            .status(200, () => {
+              loggedIn = true;
+            })
+            .send({ data: { token: "login token" } });
+
+          // res.status(200).send({ data: { token: "this is a fake token" } });
         } else {
+          console.log("incorrect password");
           res.status(401).send({
             error: { code: 401, message: "invalid username and/or password." },
           });
         }
       } else {
+        console.log("no user found");
         //cause a delay to hide the fact that there was no match
         let fakePass = `$je31m${saltRounds}leeisthebestttt`;
         await bcrypt.compare(submittedPass, fakePass);
@@ -80,6 +96,20 @@ app.post("/login", async (req, res) => {
     }
   });
 });
+console.log(loggedIn);
+
+//possibilities
+
+// app.get("/", checkAuthenticated, (req, res) => {
+//   res.send("hello");
+// });
+
+// function checkAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
+//   res.redirect("./public/login.html");
+// }
 
 app.listen(port, (err) => {
   if (err) {

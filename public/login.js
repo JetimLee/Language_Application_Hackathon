@@ -40,7 +40,10 @@ function sendData(user, endpoint, callback) {
 function loginSuccess(data) {
   //we have a token so put it in localstorage
   console.log("token", data.token);
-  sessionStorage.setItem("myapp-token", data.token);
+  sessionStorage.setItem("myapp_token", data.token);
+  console.log(sessionStorage);
+  //opening the new page from here some how
+  window.open("register.html", "_self");
   alert("You are logged in");
 }
 

@@ -146,6 +146,9 @@ const displayResult = (value) => {
 }
 
 const checkAnswer = (string) => {
+	let parent = input.parentElement;
+	input.remove();
+	parent.insertAdjacentHTML('beforeend', `<span>${string}</span>`);
 	index = userWords.findIndex(a => a.word_id == currentCard.word_id);
 	if (string == currentCard.translation) {
 		userWords[index].times_right++;
@@ -194,7 +197,7 @@ const showCard = () => {
 	card.classList.add("card");
 	let languageName = getLanguageName(currentCard.language_id);
 	card.innerHTML = `
-	<div class="targetLanguage"><span>${languageName}</span>${currentCard.word}</div>
+	<div class="targetLanguage"><span>${languageName}</span><span>${currentCard.word}</span></div>
 	<div class="sourceLanguage"><span>English</span><input id="input" type="text"></div>
 	`;
 	cards.appendChild(card);

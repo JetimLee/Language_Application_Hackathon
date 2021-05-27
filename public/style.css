@@ -35,13 +35,17 @@ h1 {
     text-align: center;
 }
 
-.card span {
+.card span:first-child {
 	float: left;
 }
 
-.card div input {
+.card > div input {
 	text-align: center;
-    margin-top: -2px;
+	padding: 0 0 1px 0;
+}
+
+.card > div:last-child span {
+    margin-bottom: 2px;
 }
 
 .targetLanguage, .targetLanguage input {
@@ -54,17 +58,11 @@ h1 {
 	border-color: gray;
 }
 
-/*.targetLanguage input {
-}
-
-.sourceLanguage input {
-}*/
 
 #input {
     border-width: 0 0 2px 0;
 	outline:  0;
 }
-
 
 .startScreen {
 	display: grid;

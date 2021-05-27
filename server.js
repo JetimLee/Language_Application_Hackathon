@@ -21,11 +21,13 @@ app.post("/register", async (req, resp) => {
     //bcrypt has a hash method that creates an encrypted password
     //the method takes what you're encrypting and how many times
     let hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    let newUser = {
-      _id: Date.now(),
-      email: req.body.email,
-      password: hashedPassword,
-    };
+    let newUser = [
+      {
+        _id: Date.now(),
+        email: req.body.email,
+        password: hashedPassword,
+      },
+    ];
     users.push(newUser);
     fs.writeFile("usersText", JSON.stringify(newUser), (err) => {
       if (err) {
@@ -47,28 +49,36 @@ app.post("/login", async (req, res) => {
   let savedPass;
   //get the email and password from req.body
   //find the match for the email
-  let matchUser = users.find((user) => req.body.email === user.email);
-  if (matchUser) {
-    //validate the password using bcrypt
-    submittedPass = req.body.password; //plain text from browser
-    savedPass = matchUser.password; //that has been hashed
-    const passwordDidMatch = await bcrypt.compare(submittedPass, savedPass);
-    if (passwordDidMatch) {
-      res.status(200).send({ data: { token: "this is a fake token" } });
+  await fs.readFile("usersText", async (err, data) => {
+    if (err) {
+      console.log(err);
     } else {
-      res.status(401).send({
-        error: { code: 401, message: "invalid username and/or password." },
-      });
+      console.log(`i read the file, here's the data! ${data}`);
+      let usersArray = JSON.parse(data);
+      let matchUser = usersArray.find((user) => req.body.email === user.email);
+      if (matchUser) {
+        //validate the password using bcrypt
+        submittedPass = req.body.password; //plain text from browser
+        savedPass = matchUser.password; //that has been hashed
+        const passwordDidMatch = await bcrypt.compare(submittedPass, savedPass);
+        if (passwordDidMatch) {
+          res.status(200).send({ data: { token: "this is a fake token" } });
+        } else {
+          res.status(401).send({
+            error: { code: 401, message: "invalid username and/or password." },
+          });
+        }
+      } else {
+        //cause a delay to hide the fact that there was no match
+        let fakePass = `$je31m${saltRounds}leeisthebestttt`;
+        await bcrypt.compare(submittedPass, fakePass);
+        //to slow down the process, primarily against hackers
+        res.status(401).send({
+          error: { code: 401, message: "invalid username and/or password." },
+        });
+      }
     }
-  } else {
-    //cause a delay to hide the fact that there was no match
-    let fakePass = `$je31m${saltRounds}leeisthebestttt`;
-    await bcrypt.compare(submittedPass, fakePass);
-    //to slow down the process, primarily against hackers
-    res.status(401).send({
-      error: { code: 401, message: "invalid username and/or password." },
-    });
-  }
+  });
 });
 
 app.listen(port, (err) => {

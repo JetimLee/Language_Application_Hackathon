@@ -35,14 +35,20 @@ const capitalize = (string) => {
 const selectLanguage = (event) => {
 	if (event.target.value >= 0) {
 		currentLanguage = event.target.value;
+		if (event.target.id == "select1") {
+			console.log(event.target)
+			console.log(event.target.id)
+			getSessionWords();
+		}
 	}
 }
 
-const showLanguageList = (ids = allLanguagesIds) => {
+const showLanguageList = (ids = allLanguagesIds,div) => {
 	let select = document.createElement("select");
+	let id = (div.id == "div1" ? "select1" : "select2");
+	select.id = id;
 	let subsetLanguages = languages.filter(a => ids.includes(a.language_id));
 	let option = document.createElement("option");
-		// option.setAttribute();
 		option.textContent = "Select one";
 		select.appendChild(option);
 	for (let item of subsetLanguages) {
@@ -51,8 +57,8 @@ const showLanguageList = (ids = allLanguagesIds) => {
 		option.textContent = capitalize(item.language_name); 
 		select.appendChild(option);
 	}
-	select.addEventListener("change",selectLanguage)
-	root.appendChild(select);
+	select.addEventListener("change",selectLanguage);
+	div.appendChild(select);
 }
 
 const startScreen = () => {
@@ -60,39 +66,39 @@ const startScreen = () => {
 	userLanguagesIds = allLanguagesIds.filter(a => userWordsArray.includes(a));
 	otherLanguagesIds = allLanguagesIds.filter(a => !userWordsArray.includes(a));
 	root.innerHTML = "";
+	root.classList.toggle("startScreen");
 	let div1 = document.createElement("div");
-	div1.textContent = "Welcome! Choose one of your languages to practice:"
+	div1.id = "div1";
+	div1.innerHTML = `<p>Welcome! Choose one of your languages to practice:</p>`
 	root.appendChild(div1);
-	showLanguageList(userLanguagesIds);
+	showLanguageList(userLanguagesIds,div1);
 	let div2 = document.createElement("div");
-	div2.textContent = "Or you can choose a new language:"
+	div2.id = "div2";
+	div2.innerHTML = `<p>Or you can choose a new language:</p>`
 	root.appendChild(div2);
-	showLanguageList(otherLanguagesIds);
+	showLanguageList(otherLanguagesIds,div2);
 }
 
 startScreen();
-
-
-
 
 let thisUser = 1;
 
 let sessionWords;
 
-let getSessionWords = (user_id) => {
-	sessionWords = userWords.filter(a => a.user_id == user_id);
+let getSessionWords = () => {
+	sessionWords = userWords.filter(a => a.user_id == thisUser && a.language_id == currentLanguage);
+	console.log(sessionWords);
+	setCurrentCard(sessionWords[0]);
 }
-
-getSessionWords(thisUser);
 
 let currentCard;
 
 setCurrentCard = (word) => {
 	let matches = language_words.filter(a => a.word_id === word.word_id);
-	currentCard = { word_id:matches[0].word_id, word:matches[0].word, translation: matches[0].translation};
+	currentCard = matches[0];
+	showCard();
 }
 
-setCurrentCard(sessionWords[0]);
 
 const checkAnswer = (string) => {
 	index = userWords.findIndex(a => a.word_id == currentCard.word_id);
@@ -112,6 +118,8 @@ const submitAnswer = (event) => {
 }
 
 const showCard = () => {
+	root.innerHTML = "";
+	root.classList.toggle("startScreen");
 	let card = document.createElement("div");
 	card.classList.add("card");
 	card.innerHTML = `
@@ -123,7 +131,6 @@ const showCard = () => {
 	answer.addEventListener("keyup",submitAnswer)
 }
 
-showCard();
 
 
 

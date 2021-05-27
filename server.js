@@ -2,11 +2,13 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = process.env.API_port || 333;
+const fs = require("fs");
 
 //this is all bcrypt stuff
 const bcrypt = require("bcrypt");
+//how many times i want the password to be hashed
 const saltRounds = 13;
-//this is my array of users
+//this is my array of users, it is currently stored in users.js
 const users = require("./users").users;
 
 //handling json body requests
@@ -25,6 +27,11 @@ app.post("/register", async (req, resp) => {
       password: hashedPassword,
     };
     users.push(newUser);
+    fs.writeFile("usersText", JSON.stringify(newUser), (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
     console.log(`list of users ${users}`);
     resp.status(201).send({ data: newUser });
   } else {
@@ -35,6 +42,7 @@ app.post("/register", async (req, resp) => {
 });
 
 app.post("/login", async (req, res) => {
+  //to do - check against the file and not users array in users.js
   let submittedPass;
   let savedPass;
   //get the email and password from req.body

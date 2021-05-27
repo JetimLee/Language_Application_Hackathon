@@ -17,8 +17,8 @@ let languages = [
 let userWords =[
 {user_id:1,language_id:1,word_id:1,times_right:0,times_wrong:0},
 {user_id:1,language_id:1,word_id:2,times_right:0,times_wrong:0},
-{user_id:1,language_id:2,word_id:1,times_right:0,times_wrong:0},
-{user_id:2,language_id:1,word_id:1,times_right:0,times_wrong:0}
+{user_id:1,language_id:2,word_id:6,times_right:0,times_wrong:0},
+{user_id:2,language_id:1,word_id:3,times_right:0,times_wrong:0}
 ]
 
 let root = document.getElementById("root");
@@ -36,12 +36,24 @@ const selectLanguage = (event) => {
 	if (event.target.value >= 0) {
 		currentLanguage = event.target.value;
 		if (event.target.id == "select1") {
-			console.log(event.target)
-			console.log(event.target.id)
 			getSessionWords();
+			reviewOrQuiz();
 		}
 	}
 }
+
+
+
+
+const reviewOrQuiz = () => {
+	// root.innerHTML = "";
+	// let div = document.createElement("div");
+
+	// button
+	root.classList.toggle("startScreen");
+	setCurrentCard();
+}
+
 
 const showLanguageList = (ids = allLanguagesIds,div) => {
 	let select = document.createElement("select");
@@ -87,28 +99,52 @@ let sessionWords;
 
 let getSessionWords = () => {
 	sessionWords = userWords.filter(a => a.user_id == thisUser && a.language_id == currentLanguage);
-	console.log(sessionWords);
-	setCurrentCard(sessionWords[0]);
 }
 
-let currentCard;
+let quizzedWords = [];
 
-setCurrentCard = (word) => {
+let currentCard = {word_id:null};
+
+const setCurrentCard = () => {
+	let num;
+	let word_id;
+	do {
+		num = generateRandom();
+		word_id = sessionWords[num].word_id;
+	} while (word_id == currentCard.word_id);
+
+	let word = sessionWords[num];
 	let matches = language_words.filter(a => a.word_id === word.word_id);
 	currentCard = matches[0];
 	showCard();
 }
 
+const generateRandom = () => {
+	return Math.floor(Math.random() * sessionWords.length);
+}
+
+const displayResult = (value) => {
+	let message = value ? "Correct!" : "Wrong answer"
+	let div = document.getElementById("result");
+	div.innerHTML = `<p>${message}</p>`;
+	let button = document.createElement("button");
+	button.textContent = "Next";
+	button.addEventListener("click",setCurrentCard)
+	div.appendChild(button);
+	root.appendChild(div);
+}
 
 const checkAnswer = (string) => {
 	index = userWords.findIndex(a => a.word_id == currentCard.word_id);
 	if (string == currentCard.translation) {
-		console.log("Correct");
 		userWords[index].times_right++;
+		displayResult(true);
 	} else {
-		console.log("Wrong")
 		userWords[index].times_wrong++;
+		displayResult(false);
 	}
+	quizzedWords.push(userWords[index].word_id);
+	console.log(quizzedWords);
 }
 
 const submitAnswer = (event) => {
@@ -117,18 +153,34 @@ const submitAnswer = (event) => {
 	}
 }
 
+
+const getLanguageName = (id) => {
+	let index = languages.findIndex(a => a.language_id == id);
+	let language = languages[index].language_name;
+	return capitalize(language);
+}
+
 const showCard = () => {
 	root.innerHTML = "";
-	root.classList.toggle("startScreen");
 	let card = document.createElement("div");
 	card.classList.add("card");
+	let languageName = getLanguageName(currentCard.language_id);
+	// console.log(languageName);
 	card.innerHTML = `
 	<div>${currentCard.word}</div>
 	<div><input id="answer" type="text"></div>
 	`;
 	root.appendChild(card);
+
+	let div = document.createElement("div");
+	div.id = "result";
+	let button = document.createElement("button");
+	button.textContent = "Skip";
+	button.addEventListener("click",setCurrentCard)
+	div.appendChild(button);
+	root.appendChild(div);
 	let answer = document.getElementById("answer");
-	answer.addEventListener("keyup",submitAnswer)
+	answer.addEventListener("keyup",submitAnswer);
 }
 
 

@@ -22,10 +22,17 @@ let userWords =[
 ]
 
 let root = document.getElementById("root");
-let score;
+let topSec;
 let cards;
 let actions;
 let answerInput;
+let addWords;
+
+let thisUser = 1;
+let sessionWords;
+let quizzedWords = [];
+let correctAnswers = 0;
+let currentCard = {word_id:null};
 inputCount = 0;
 
 let userLanguagesIds;
@@ -62,11 +69,16 @@ const selectLanguage = (event) => {
 const newVocabScreen = () => {
 	root.classList.toggle("newVocabScreen");
 	root.innerHTML = `
-	<p>Enter up to ten new words or phrases you want to study</p>`
+	<div id="topSec"><p>Enter up to ten new words or phrases you want to study</p></div`
 	let newVocabInputs = document.createElement("div")
 	newVocabInputs.id = "newVocabInputs";
 	newVocabInputs.appendChild(createInput());
 	root.appendChild(newVocabInputs);
+	root.insertAdjacentHTML("beforeend",`
+		<div id="actions">
+			<button id="addWords">Add words</button>
+		</div>`)
+	addWords = document.getElementById("addWords");
 }
 
 const submitWord = (event) => {
@@ -92,7 +104,6 @@ const getTranslation = (string) => {
 	let translation = "ice cream";
 	let newVocabInputs = document.getElementById("newVocabInputs");
 	newVocabInputs.insertAdjacentHTML('beforeend', `<div class="targetLanguage"><span>${translation}</span></div>`);
-	// addWordToDBs(string);
 	if (inputCount < 10) {
 		newVocabInputs.appendChild(createInput());
 	}
@@ -104,8 +115,8 @@ const reviewOrQuiz = () => {
 
 	// button
 	root.classList.toggle("cardScreen");
-	root.innerHTML = `<div id="score"></div><div id="cards"></div><div id="actions"></div>`
-	score = document.getElementById("score");
+	root.innerHTML = `<div id="topSec"></div><div id="cards"></div><div id="actions"></div>`
+	topSec = document.getElementById("topSec");
 	cards = document.getElementById("cards");
 	actions = document.getElementById("actions");
 	showNumbers();
@@ -151,18 +162,12 @@ const startScreen = () => {
 
 startScreen();
 
-let thisUser = 1;
 
-let sessionWords;
 
 let getSessionWords = () => {
 	sessionWords = userWords.filter(a => a.user_id == thisUser && a.language_id == currentLanguage);
 }
 
-let quizzedWords = [];
-let correctAnswers = 0;
-
-let currentCard = {word_id:null};
 
 const setCurrentCard = () => {
 	let num;
@@ -245,10 +250,10 @@ const appendSkipButton = () => {
 }
 
 const showNumbers = () => {
-	let score = document.getElementById("score")
+	let topSec = document.getElementById("topSec")
 	let div = document.createElement("div");
 	div.innerHTML = `<span id="correct">${correctAnswers}</span> / <span id="total">${sessionWords.length}</span>`;
-	score.appendChild(div);
+	topSec.appendChild(div);
 }
 
 const showCard = () => {
@@ -270,6 +275,9 @@ const showCard = () => {
 	answerInput.addEventListener("keyup",submitAnswer);
 }
 
+const addWordsToDBs = () => {
+	let sources = document.querySelector("");
+}
 
 
 

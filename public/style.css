@@ -43,7 +43,7 @@ select {
 
 /* card quiz */
 
-.cardScreen {
+.cardScreen, .newVocabScreen {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 40px;
@@ -118,6 +118,7 @@ input {
 }
 
 #newVocabInputs {
+	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 1rem;

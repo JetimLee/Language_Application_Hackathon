@@ -18,19 +18,23 @@ const users = require("./users").users;
 app.use(express.json());
 app.use(cors());
 
-const key =
-  "trnsl.1.1.20210528T084434Z.4d3133de06fa8f3a.5cfcaf3ee6f0eab20cf8b03db9e9d3851bf5abdd";
-const url = `https://translate.yandex.net/api/v1.5/tr.json/getLangs&key=${key}ui=en`;
-const getLanguageList = async () => {
-  try {
-    return await axios.get(url);
-    // let data = await response.json();
-    // console.log(data);
-  } catch (error) {
-    console.log(error);
-  }
-};
-getLanguageList();
+// const key =
+//   "trnsl.1.1.20210528T084434Z.4d3133de06fa8f3a.5cfcaf3ee6f0eab20cf8b03db9e9d3851bf5abdd";
+// const url = `https://translate.yandex.net/api/v1.5/tr.json/getLangs&key=${key}ui=en`;
+// const getLanguageList = async () => {
+//   try {
+//     return await axios.get(url);
+//     // let data = await response.json();
+//     // console.log(data);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+// getLanguageList();
+
+
+app.use('/',express.static(__dirname+'/public'));
+
 
 app.post("/register", async (req, resp) => {
   let matchUser = users.find((user) => req.body.email === user.email);

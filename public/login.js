@@ -77,7 +77,7 @@ const postData = async (link) => {
       method: "GET",
     });
     const data = await response.json(); // parses JSON response into native JavaScript objects
-    console.log(data);
+    return data;
   } catch (e) {
     console.log(e);
   }

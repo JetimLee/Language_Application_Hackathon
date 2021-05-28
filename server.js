@@ -7,13 +7,13 @@ const path = require("path");
 const passport = require("passport");
 const axios = require("axios");
 //downloaded some dependencies that aren't exactly necessary, was using axios for experimentation
-
 //this is all bcrypt stuff
 const bcrypt = require("bcrypt");
 //how many times i want the password to be hashed
 const saltRounds = 13;
 //this is my array of users, it is currently stored in users.js for testing purposes
 // const users = require("./users").users;
+//28/05/2021, deleted
 
 //handling json body requests
 app.use(express.json());
@@ -99,18 +99,37 @@ app.post("/login", async (req, res) => {
 });
 console.log(loggedIn);
 
-//possibilities
+app.get("/userwords", async (req, resp) => {
+  await fs.readFile("userWords", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`i read the userWords file, here's the data! ${data}`);
+    }
+    let filesToJSON = JSON.parse(data);
+    resp.send(filesToJSON);
+  });
+});
 
-// app.get("/", checkAuthenticated, (req, res) => {
-//   res.send("hello");
-// });
+app.get("/languagewords", async (req, resp) => {
+  await fs.readFile("languageWords", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`i read the languagewords file, here's the data! ${data}`);
+    }
+    let fileToJSON = JSON.parse(data);
+    resp.send(fileToJSON);
+  });
+});
 
-// function checkAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.redirect("./public/login.html");
-// }
+fs.readFile("languageWords", async (err, data) => {
+  if (err) {
+    console.log(error);
+  } else {
+    console.log(`i read the languageWords file, here's the data! ${data}`);
+  }
+});
 
 app.listen(port, (err) => {
   if (err) {

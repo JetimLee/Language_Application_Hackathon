@@ -1,0 +1,6 @@
+[
+  {"user_id":1,"language_id":1,"word_id":1,"times_right":0,"times_wrong":0},
+  {"user_id":1,"language_id":1,"word_id":2,"times_right":0,"times_wrong":0},
+  {"user_id":1,"language_id":2,"word_id":6,"times_right":0,"times_wrong":0},
+  {"user_id":2,"language_id":1,"word_id":3,"times_right":0,"times_wrong":0}
+  ]

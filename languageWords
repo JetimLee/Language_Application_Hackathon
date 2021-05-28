@@ -1,0 +1,8 @@
+[
+	{"word_id":1,"language_id":1,"word":"un","translation":"one","part_of_speech":"number"},
+	{"word_id":2,"language_id":1,"word":"deux","translation":"two","part_of_speech":"number"},
+	{"word_id":3,"language_id":1,"word":"trois","translation":"three","part_of_speech":"number"},
+	{"word_id":4,"language_id":1,"word":"chien","translation":"dog","part_of_speech":"noun"},
+	{"word_id":5,"language_id":1,"word":"chat","translation":"cat","part_of_speech":"noun"},
+	{"word_id":6,"language_id":2,"word":"uno","translation":"one","part_of_speech":"number"}
+	]

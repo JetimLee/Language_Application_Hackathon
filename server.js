@@ -3,6 +3,9 @@ const app = express();
 const cors = require("cors");
 const port = process.env.API_port || 333;
 const fs = require("fs");
+const path = require("path");
+const passport = require("passport");
+const axios = require("axios");
 
 //this is all bcrypt stuff
 const bcrypt = require("bcrypt");
@@ -14,6 +17,20 @@ const users = require("./users").users;
 //handling json body requests
 app.use(express.json());
 app.use(cors());
+
+const key =
+  "trnsl.1.1.20210528T084434Z.4d3133de06fa8f3a.5cfcaf3ee6f0eab20cf8b03db9e9d3851bf5abdd";
+const url = `https://translate.yandex.net/api/v1.5/tr.json/getLangs&key=${key}ui=en`;
+const getLanguageList = async () => {
+  try {
+    return await axios.get(url);
+    // let data = await response.json();
+    // console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+getLanguageList();
 
 app.post("/register", async (req, resp) => {
   let matchUser = users.find((user) => req.body.email === user.email);
@@ -43,8 +60,11 @@ app.post("/register", async (req, resp) => {
   }
 });
 
+let loggedIn = false;
+
 app.post("/login", async (req, res) => {
   //to do - check against the file and not users array in users.js
+  let loggedIn = false;
   let submittedPass;
   let savedPass;
   //get the email and password from req.body
@@ -62,13 +82,24 @@ app.post("/login", async (req, res) => {
         savedPass = matchUser.password; //that has been hashed
         const passwordDidMatch = await bcrypt.compare(submittedPass, savedPass);
         if (passwordDidMatch) {
-          res.status(200).send({ data: { token: "this is a fake token" } });
+          loggedIn = true;
+          console.log("success!");
+
+          res
+            .status(200, () => {
+              loggedIn = true;
+            })
+            .send({ data: { token: "login token" } });
+
+          // res.status(200).send({ data: { token: "this is a fake token" } });
         } else {
+          console.log("incorrect password");
           res.status(401).send({
             error: { code: 401, message: "invalid username and/or password." },
           });
         }
       } else {
+        console.log("no user found");
         //cause a delay to hide the fact that there was no match
         let fakePass = `$je31m${saltRounds}leeisthebestttt`;
         await bcrypt.compare(submittedPass, fakePass);
@@ -80,6 +111,20 @@ app.post("/login", async (req, res) => {
     }
   });
 });
+console.log(loggedIn);
+
+//possibilities
+
+// app.get("/", checkAuthenticated, (req, res) => {
+//   res.send("hello");
+// });
+
+// function checkAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
+//   res.redirect("./public/login.html");
+// }
 
 app.listen(port, (err) => {
   if (err) {

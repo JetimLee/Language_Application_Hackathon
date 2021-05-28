@@ -51,3 +51,36 @@ function failure(err) {
   alert(err.message);
   console.warn(err.code, err.message);
 }
+
+const key =
+  "trnsl.1.1.20210528T084434Z.4d3133de06fa8f3a.5cfcaf3ee6f0eab20cf8b03db9e9d3851bf5abdd";
+const url = `https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=${key}&ui=en`;
+// const getLanguageList = async (data = {}) => {
+//   try {
+//     const response = await fetch(url, {
+//       mode: "no-cors",
+//       headers: { "Content-Type": "application/json" },
+//     });
+//     let data = await response.json();
+//     console.log(data);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+// getLanguageList();
+
+//THIS WORKS, RETURNS AN ARRAY OF LANGUAGE OPTIONS A HUGE OBJECT WITH LANGUAGE PROPERTIES AND LANGUAGE SPELLED OUT IN KEY VALUES
+const postData = async (link) => {
+  // Default options are marked with *
+  try {
+    const response = await fetch(link, {
+      method: "GET",
+    });
+    const data = await response.json(); // parses JSON response into native JavaScript objects
+    console.log(data);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+postData(url);

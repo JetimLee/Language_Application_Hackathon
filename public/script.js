@@ -269,7 +269,7 @@ const showCard = () => {
 	setTimeout(() => answerInput.focus(),5);
 	answerInput.addEventListener("keyup",submitAnswer);
 }
-
+ 
 
 
 

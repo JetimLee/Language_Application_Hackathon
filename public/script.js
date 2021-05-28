@@ -25,7 +25,8 @@ let root = document.getElementById("root");
 let score;
 let cards;
 let actions;
-let input;
+let answerInput;
+inputCount = 0;
 
 let userLanguagesIds;
 let otherLanguagesIds;
@@ -39,22 +40,62 @@ const capitalize = (string) => {
 const selectLanguage = (event) => {
 	if (event.target.value >= 0) {
 		currentLanguage = event.target.value;
+		// if user chooses language already learning or new one
+		root.classList.toggle("startScreen");
 		if (event.target.id == "select1") {
 			getSessionWords();
 			reviewOrQuiz();
+		} else {
+			newVocabScreen();
 		}
 	}
 }
 
 
 
+const newVocabScreen = () => {
+	root.classList.toggle("newVocabScreen");
+	root.innerHTML = `
+	<p>Enter up to ten new words or phrases you want to study</p>`
+	let newVocabInputs = document.createElement("div")
+	newVocabInputs.id = "newVocabInputs";
+	newVocabInputs.appendChild(createInput());
+	root.appendChild(newVocabInputs);
+}
+
+const submitWord = (event) => {
+	if (event.key === "Enter" && event.target.value !== "") {
+		changeInputToString(event.target);
+		getTranslation(event.target.value);
+	}
+}
+
+const createInput = () => {
+	let div = document.createElement("div");
+	div.classList.add("sourceLanguage");
+	let input = document.createElement("input");
+	input.addEventListener("keyup",submitWord);
+	div.appendChild(input);
+	inputCount++;
+	setTimeout(() => input.focus(),5);
+
+	return div;
+}
+
+const getTranslation = (string) => {
+	let translation = "ice cream";
+	let newVocabInputs = document.getElementById("newVocabInputs");
+	newVocabInputs.insertAdjacentHTML('beforeend', `<div class="targetLanguage"><span>${translation}</span></div>`);
+	if (inputCount < 10) {
+		newVocabInputs.appendChild(createInput());
+	}
+}
 
 const reviewOrQuiz = () => {
 	// root.innerHTML = "";
 	// let div = document.createElement("div");
 
 	// button
-	root.classList.toggle("startScreen");
 	root.classList.toggle("cardScreen");
 	root.innerHTML = `<div id="score"></div><div id="cards"></div><div id="actions"></div>`
 	score = document.getElementById("score");
@@ -150,10 +191,17 @@ const displayResult = (value) => {
 	}
 }
 
-const checkAnswer = (string) => {
+const changeInputToString = (input) => {
 	let parent = input.parentElement;
 	input.remove();
-	parent.insertAdjacentHTML('beforeend', `<span>${string}</span>`);
+	parent.insertAdjacentHTML('beforeend', `<span>${input.value}</span>`);
+}
+
+const checkAnswer = (string) => {
+	changeInputToString(answerInput,string)
+	// let parent = answer.parentElement;
+	// input.remove();
+	// parent.insertAdjacentHTML('beforeend', `<span>${string}</span>`);
 	index = userWords.findIndex(a => a.word_id == currentCard.word_id);
 	if (string == currentCard.translation) {
 		userWords[index].times_right++;
@@ -171,7 +219,7 @@ const checkAnswer = (string) => {
 }
 
 const submitAnswer = (event) => {
-	if (event.key == "Enter") {
+	if (event.key === "Enter" && event.target.value !== "") {
 		checkAnswer(event.target.value);
 	}
 }
@@ -203,19 +251,17 @@ const showCard = () => {
 	let languageName = getLanguageName(currentCard.language_id);
 	card.innerHTML = `
 	<div class="targetLanguage"><span>${languageName}</span><span>${currentCard.word}</span></div>
-	<div class="sourceLanguage"><span>English</span><input id="input" type="text"></div>
+	<div class="sourceLanguage"><span>English</span><input id="answerInput" type="text"></div>
 	`;
 	cards.appendChild(card);
 	actions.innerHTML = "";
 	if (sessionWords.length > 1) {
 		appendSkipButton();		
 	}
-	input = document.getElementById("input");
-	input.addEventListener("keyup",submitAnswer);
+	answerInput = document.getElementById("answerInput");
+	setTimeout(() => answerInput.focus(),5);
+	answerInput.addEventListener("keyup",submitAnswer);
 }
-
-
-// add something for when on last card, and answers incorrectly
 
 
 

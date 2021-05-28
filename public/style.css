@@ -17,6 +17,35 @@ h1 {
 	text-align: center;
 }
 
+
+/* start screen */
+
+.startScreen {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 40px;
+	justify-content: center;
+	align-items: center;
+    justify-items: center;
+}
+
+select {
+	margin: auto;
+	display: block;
+}
+
+
+/* card quiz */
+
+.cardScreen {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 40px;
+	justify-content: center;
+	align-items: center;
+    justify-items: center;
+}
+
 .card {
 	width: 300px;
 	height: 100px;
@@ -58,35 +87,11 @@ h1 {
 	border-color: gray;
 }
 
-
-#input {
+input {
     border-width: 0 0 2px 0;
 	outline:  0;
 }
 
-.startScreen {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 40px;
-	justify-content: center;
-	align-items: center;
-    justify-items: center;
-}
-
-select {
-	margin: auto;
-	display: block;
-}
-
-
-.cardScreen {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 40px;
-	justify-content: center;
-	align-items: center;
-    justify-items: center;
-}
 
 #actions {
 	/*height: 100px;*/
@@ -97,6 +102,17 @@ select {
 	align-items: center;
 }
 
+
+/* new vocab */
+
+.newVocabScreen {
+	
+}
+
+#newVocabInputs {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
 
 
 

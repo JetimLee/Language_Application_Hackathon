@@ -1,3 +1,17 @@
+//Gavin code for front end authorization starts here, checking for JWT
+window.addEventListener("load", (event) => {
+  if (sessionStorage.getItem("myapp_token") === null) {
+    alert(`it appears you're not logged in, routing you to login`);
+    window.open("./login.html", "_self");
+    console.log(`there ain't no token here`);
+  }
+  if (sessionStorage.getItem("myapp_token") !== null) {
+    alert(`welcome to the app!`);
+    console.log(`i found a token!`);
+  }
+});
+
+//Josh Code
 let language_words = [
   {
     word_id: 1,
@@ -319,6 +333,7 @@ const showCard = () => {
   answerInput.addEventListener("keyup", submitAnswer);
 };
 
+//Gavin Code
 const key =
   "trnsl.1.1.20210528T084434Z.4d3133de06fa8f3a.5cfcaf3ee6f0eab20cf8b03db9e9d3851bf5abdd";
 const url = `https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=${key}&ui=en`;
@@ -337,3 +352,4 @@ const postData = async (link) => {
 
 postData(url).then((data) => console.log(data));
 //to do - look for token, if token is not found it should reroute you to the login page
+//Josh continued

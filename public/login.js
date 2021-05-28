@@ -43,7 +43,7 @@ function loginSuccess(data) {
   sessionStorage.setItem("myapp_token", data.token);
   console.log(sessionStorage);
   //opening the new page from here some how
-  window.open("register.html", "_self");
+  window.open("./", "_self");
   alert("You are logged in");
 }
 

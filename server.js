@@ -6,47 +6,38 @@ const fs = require("fs");
 const path = require("path");
 const passport = require("passport");
 const axios = require("axios");
+//downloaded some dependencies that aren't exactly necessary, was using axios for experimentation
 
 //this is all bcrypt stuff
 const bcrypt = require("bcrypt");
 //how many times i want the password to be hashed
 const saltRounds = 13;
-//this is my array of users, it is currently stored in users.js
-const users = require("./users").users;
+//this is my array of users, it is currently stored in users.js for testing purposes
+// const users = require("./users").users;
 
 //handling json body requests
 app.use(express.json());
 app.use(cors());
 
-const key =
-  "trnsl.1.1.20210528T084434Z.4d3133de06fa8f3a.5cfcaf3ee6f0eab20cf8b03db9e9d3851bf5abdd";
-const url = `https://translate.yandex.net/api/v1.5/tr.json/getLangs&key=${key}ui=en`;
-const getLanguageList = async () => {
-  try {
-    return await axios.get(url);
-    // let data = await response.json();
-    // console.log(data);
-  } catch (error) {
-    console.log(error);
-  }
-};
-getLanguageList();
+app.use("/", express.static(__dirname + "/public"));
 
 app.post("/register", async (req, resp) => {
+  let data = fs.readFileSync("./usersText");
+  let dataString = data.toString();
+  let users = JSON.parse(dataString);
   let matchUser = users.find((user) => req.body.email === user.email);
   if (!matchUser) {
     //bcrypt has a hash method that creates an encrypted password
     //the method takes what you're encrypting and how many times
     let hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    let newUser = [
-      {
-        _id: Date.now(),
-        email: req.body.email,
-        password: hashedPassword,
-      },
-    ];
+    let newUser = {
+      _id: Date.now(),
+      email: req.body.email,
+      password: hashedPassword,
+    };
     users.push(newUser);
-    fs.writeFile("usersText", JSON.stringify(newUser), (err) => {
+
+    fs.writeFile("usersText", JSON.stringify(users), (err) => {
       if (err) {
         console.log(err);
       }
@@ -54,7 +45,7 @@ app.post("/register", async (req, resp) => {
     console.log(`list of users ${users}`);
     resp.status(201).send({ data: newUser });
   } else {
-    resp.status.status(400).send({
+    resp.status(400).send({
       error: { code: 400, message: `that email address is already in usage` },
     });
   }
@@ -82,14 +73,9 @@ app.post("/login", async (req, res) => {
         savedPass = matchUser.password; //that has been hashed
         const passwordDidMatch = await bcrypt.compare(submittedPass, savedPass);
         if (passwordDidMatch) {
-          loggedIn = true;
           console.log("success!");
 
-          res
-            .status(200, () => {
-              loggedIn = true;
-            })
-            .send({ data: { token: "login token" } });
+          res.status(200, () => {}).send({ data: { token: "login token" } });
 
           // res.status(200).send({ data: { token: "this is a fake token" } });
         } else {

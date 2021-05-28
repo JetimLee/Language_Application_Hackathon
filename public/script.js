@@ -1,12 +1,12 @@
 //Gavin code for front end authorization starts here, checking for JWT
 window.addEventListener("load", (event) => {
   if (sessionStorage.getItem("myapp_token") === null) {
-    alert(`it appears you're not logged in, routing you to login`);
+    // alert(`it appears you're not logged in, routing you to login`);
     window.open("./login.html", "_self");
     console.log(`there ain't no token here`);
   }
   if (sessionStorage.getItem("myapp_token") !== null) {
-    alert(`welcome to the app!`);
+    // alert(`welcome to the app!`);
     console.log(`i found a token!`);
   }
 });

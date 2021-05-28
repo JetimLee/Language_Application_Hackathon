@@ -137,10 +137,15 @@ const generateRandom = () => {
 const displayResult = (value) => {
 	let message = value ? "Correct!" : "Wrong answer"
 	actions.innerHTML = `<p>${message}</p>`;
-	if (sessionWords.length > 0) {
+	if ((value && sessionWords.length > 0) || (!value && sessionWords.length > 1)) {
 		let button = document.createElement("button");
 		button.textContent = "Next";
 		button.addEventListener("click",setCurrentCard)
+		actions.appendChild(button);
+	} else if (!value && sessionWords.length == 1) {
+		let button = document.createElement("button");
+		button.textContent = "Try again";
+		button.addEventListener("click",showCard)
 		actions.appendChild(button);
 	}
 }
@@ -210,7 +215,7 @@ const showCard = () => {
 }
 
 
-
+// add something for when on last card, and answers incorrectly
 
 
 

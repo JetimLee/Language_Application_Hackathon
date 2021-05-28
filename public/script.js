@@ -92,6 +92,7 @@ const getTranslation = (string) => {
 	let translation = "ice cream";
 	let newVocabInputs = document.getElementById("newVocabInputs");
 	newVocabInputs.insertAdjacentHTML('beforeend', `<div class="targetLanguage"><span>${translation}</span></div>`);
+	// addWordToDBs(string);
 	if (inputCount < 10) {
 		newVocabInputs.appendChild(createInput());
 	}
@@ -268,8 +269,6 @@ const showCard = () => {
 	setTimeout(() => answerInput.focus(),5);
 	answerInput.addEventListener("keyup",submitAnswer);
 }
-
-
 
 
 

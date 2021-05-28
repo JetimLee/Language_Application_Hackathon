@@ -12,6 +12,12 @@ body, input {
 	font-size: 1rem;	
 }
 
+header {
+	margin: 0 40px;
+	display: flex;
+    justify-content: space-between;
+}
+
 h1 {
 	margin-top: 0;
 	text-align: center;
@@ -68,9 +74,12 @@ select {
 	float: left;
 }
 
+input {
+		padding: 0 0 1px 0;
+}
+
 .card > div input {
 	text-align: center;
-	padding: 0 0 1px 0;
 }
 
 .card > div:last-child span {
@@ -112,6 +121,7 @@ input {
 #newVocabInputs {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
 }
 
 

@@ -37,9 +37,17 @@ const capitalize = (string) => {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+const setCurrentLanguage = (id) => {
+	currentLanguage = id;
+	let header = document.querySelector("header");
+	header.insertAdjacentHTML('beforeend', `<h1 class="targetLanguage">${getLanguageName(id)}</h1>`);
+	;
+} 
+
 const selectLanguage = (event) => {
 	if (event.target.value >= 0) {
-		currentLanguage = event.target.value;
+		// currentLanguage = event.target.value;
+		setCurrentLanguage(event.target.value);
 		// if user chooses language already learning or new one
 		root.classList.toggle("startScreen");
 		if (event.target.id == "select1") {
@@ -50,8 +58,6 @@ const selectLanguage = (event) => {
 		}
 	}
 }
-
-
 
 const newVocabScreen = () => {
 	root.classList.toggle("newVocabScreen");

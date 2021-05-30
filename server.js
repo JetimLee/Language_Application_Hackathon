@@ -6,14 +6,14 @@ const fs = require("fs");
 const path = require("path");
 const passport = require("passport");
 const axios = require("axios");
-//downloaded some dependencies that aren't exactly necessary, was using axios for experimentation
-//this is all bcrypt stuff
+const bodyparser = require("body-parser");
 const bcrypt = require("bcrypt");
 //how many times i want the password to be hashed
 const saltRounds = 13;
 //this is my array of users, it is currently stored in users.js for testing purposes
 // const users = require("./users").users;
 //28/05/2021, deleted
+
 
 //handling json body requests
 app.use(express.json());
@@ -53,6 +53,7 @@ app.post("/register", async (req, resp) => {
 
 let loggedIn = false;
 
+let id;
 app.post("/login", async (req, res) => {
   //to do - check against the file and not users array in users.js
   let loggedIn = false;
@@ -71,11 +72,13 @@ app.post("/login", async (req, res) => {
         //validate the password using bcrypt
         submittedPass = req.body.password; //plain text from browser
         savedPass = matchUser.password; //that has been hashed
+        id = matchUser._id;
         const passwordDidMatch = await bcrypt.compare(submittedPass, savedPass);
         if (passwordDidMatch) {
+          console.log(`here is the id ${id}`);
           console.log("success!");
 
-          res.status(200, () => {}).send({ data: { token: "login token" } });
+          res.status(200, () => {}).send({ data: { token: id } });
 
           // res.status(200).send({ data: { token: "this is a fake token" } });
         } else {
@@ -99,37 +102,65 @@ app.post("/login", async (req, res) => {
 });
 console.log(loggedIn);
 
-app.get("/userwords", async (req, resp) => {
-  await fs.readFile("userWords", (err, data) => {
+
+
+app.post("/writeuserwords", (req, resp) => {
+  let data = req.body;
+  //require the ./ when writing a file
+  //MUST PASS IN CALLBACK WHEN DOING WRITE FILE
+  fs.writeFile("./userWords", JSON.stringify(data), (err) => {
     if (err) {
       console.log(err);
-    } else {
-      console.log(`i read the userWords file, here's the data! ${data}`);
     }
-    let filesToJSON = JSON.parse(data);
-    resp.send(filesToJSON);
   });
 });
 
-app.get("/languagewords", async (req, resp) => {
-  await fs.readFile("languageWords", (err, data) => {
+app.post("/writelanguagewords", (req, resp) => {
+  let data = req.body;
+  //require the ./ when writing a file
+  //MUST PASS IN CALLBACK WHEN DOING WRITE FILE
+  fs.writeFile("./languageWords", JSON.stringify(data), (err) => {
     if (err) {
       console.log(err);
-    } else {
-      console.log(`i read the languagewords file, here's the data! ${data}`);
     }
-    let fileToJSON = JSON.parse(data);
-    resp.send(fileToJSON);
   });
 });
 
-fs.readFile("languageWords", async (err, data) => {
-  if (err) {
-    console.log(error);
-  } else {
-    console.log(`i read the languageWords file, here's the data! ${data}`);
+
+app.get("/readuserwords", async (req, res) => {
+  let array = [];
+  try {
+    await fs.readFile("userWords", (err, data) => {
+      let fileString = data.toString();
+      let fileJSON = JSON.parse(fileString);
+      // console.log(`here is file JSON ${fileJSON}`);
+      array = fileJSON;
+      // array = JSON.parse(fileString);
+      // console.log("array");
+      res.send(array);
+    });
+  } catch (e) {
+    console.log(e);
   }
 });
+app.get("/readlanguagewords", async (req, res) => {
+  // console.log("a")
+  let array = [];
+  try {
+    await fs.readFile("languageWords", (err, data) => {
+      let fileString = data.toString();
+      let fileJSON = JSON.parse(fileString);
+      // console.log(`here is file string ${fileJSON}`);
+      array = fileJSON;
+      res.send(array);
+      // array = JSON.parse(fileString);
+    });
+    // console.log(`here's the array ${array}`);
+  } catch (e) {
+    // console.log(e);
+  }
+});
+
 
 app.listen(port, (err) => {
   if (err) {

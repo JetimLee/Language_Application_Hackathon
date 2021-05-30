@@ -4,19 +4,22 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="stylez.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
     <title>register</title>
   </head>
   <body>
     <header>
-      <ul>
-        <li><a href="login.html">login</a></li>
-      </ul>
+    <h1>Language Dragon <i class="fas fa-dragon"></i></h1>
+    <nav class="twoColumn">
+      <div><a href="login.html">Login</a></div>
+      <div class="active">Register</div>
+    </nav>
     </header>
     <section>
       <form action="/#" id="regForm" method="POST" autocomplete="off">
         <legend>
-          <fieldset>Register</fieldset>
+          <!-- <fieldset>Register</fieldset> -->
           <div class="formBox">
             <label for="email">Email</label
             ><input class="email" type="email" autocomplete="off" />
@@ -29,6 +32,7 @@
         </legend>
       </form>
     </section>
+  <footer>Created by Gavin Coulson and Josh Regev © 2021</footer>
     <script src="register.js"></script>
   </body>
 </html>

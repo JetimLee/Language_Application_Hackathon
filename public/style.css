@@ -26,7 +26,7 @@ h1 {
 	color: #0055ff;
 }
 
-i {
+header i {
 	margin-left: 1rem;
 	color: #ffff3a;
 	font-size: 1.8rem;
@@ -118,7 +118,6 @@ legend {
 
 #languageSelection select option {
     font-size: 1.1rem;
-
 }
 
 #languageSelection {
@@ -145,10 +144,7 @@ nav div {
 	background: lightgray;
 	text-align: center;
 	box-sizing: border-box;
-    position: relative;
-    /*top: 2px;*/
-    /*border-bottom: 2px solid gray;*/
-    /*z-index: -1;*/
+  position: relative;
 }
 
 .active {
@@ -156,8 +152,7 @@ nav div {
 	border-bottom: none;
 	background-color: white;
 	color: #0055ff;
-	/*border-bottom: none;*/
-    /*border-bottom: 2px solid white;*/
+	font-weight: 600;
 }
 
 
@@ -278,7 +273,7 @@ input {
 #newVocabInputs {
 	width: 60%;
 	display: grid;
-	grid-template-columns: 1fr 1fr min-content;
+	grid-template-columns: 1fr 1fr 1fr;
 	gap: 1rem;
 }
 
@@ -291,24 +286,27 @@ input {
 
 
 .delete button {
-	/*visibility: hidden;*/
+	margin: auto;
+	display: block;
+	visibility: hidden;
 }
 
 .delete:hover button {
-	/*visibility: visible;*/
+	/*margin: auto;*/
+	visibility: visible;
 }
 
 .incorrect {
 	color: red;
 }
 
-option:hover,
+/*option:hover,
 option:focus,
 option:active,
 option:checked {
 	font-weight: 600;
 	color:  #0055ff;
-}
+}*/
 
 button {
 	padding: 4px 6px;

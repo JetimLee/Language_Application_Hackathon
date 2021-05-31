@@ -108,7 +108,9 @@ navAddVocab.addEventListener("click",navToAddVocab);
 navQuiz.addEventListener("click",navToQuiz);
 navMyVocab.addEventListener("click",navToMyVocab);
 
-
+const getThisUserWords = () => {
+  return userWords.filter(a => a.user_id == thisUser && a.language_id == currentLanguage);
+}
 
 const myVocabScreen = () => {
   console.log(document.getElementById("answerInput"));
@@ -130,18 +132,17 @@ const myVocabScreen = () => {
   root.innerHTML = "";
   let myVocab = document.createElement("div");
   myVocab.id = "myVocab";
-  myVocab.insertAdjacentHTML("beforeend",`<h3>${getLanguageName(currentLanguage)}</h3><h3>English</h3>`);
-  let thisUserWords = userWords.filter(a => a.user_id == thisUser && a.language_id == currentLanguage);
+  myVocab.insertAdjacentHTML("beforeend",`<h3>English</h3><h3>${getLanguageName(currentLanguage)}</h3>`);
+  let thisUserWords = getThisUserWords();
   for (item of thisUserWords) {
     // console.log(item);
     let wordItem = languageWords.filter(a => a.word_id === item.word_id);
   // console.log(wordItem);
     // console.log(a);
-    let content = `<div class="targetLanguage${rtl}">${wordItem[0].word}</div><div class="sourceLanguage">${wordItem[0].translation}</div>`
+    let content = `<div class="sourceLanguage">${wordItem[0].translation}</div><div class="targetLanguage${rtl}">${wordItem[0].word}</div>`
     myVocab.insertAdjacentHTML("beforeend",content);
   }
   root.appendChild(myVocab);
-
 }
 
 
@@ -153,6 +154,8 @@ const setCurrentLanguage = (id) => {
   currentLanguage = id;
   if (rtlLanguages.includes(currentLanguage)) {
     rtl = " rtl";
+  } else {
+    rtl = "";
   }
 };
 
@@ -192,7 +195,7 @@ const addVocabScreen = () => {
   let div = document.createElement("div");
   div.id = "newVocabInputs";
   newVocabInputs = div;
-  newVocabInputs.insertAdjacentHTML("beforeend",`<h3>English</h3><h3>${getLanguageName(currentLanguage)}</h3><div></div>`);
+  newVocabInputs.insertAdjacentHTML("beforeend",`<h3>English</h3><h3>${getLanguageName(currentLanguage)}</h3><div><h3>Remove</h3></div>`);
   appendInput();
   root.appendChild(newVocabInputs);
   root.insertAdjacentHTML("beforeend",`
@@ -205,6 +208,11 @@ const addVocabScreen = () => {
 
 const submitWord = (event) => {
   if (event.key === "Enter" && event.target.value !== "") {
+    let a = languageWords.some(a => a.translation == event.target.value && a.language_id == currentLanguage);
+    if (a) {
+      alert("This item is already in your vocabulary");
+      return;
+    }
     inputCount++;
     changeInputToString(event.target,true);
     getTranslation(event.target.value);
@@ -327,7 +335,7 @@ const showLanguageList = (div, ids) => {
 
 let getSessionWords = () => {
   // console.log(userWords);
-  let thisUserWords = userWords.filter(a => a.user_id == thisUser && a.language_id == currentLanguage);
+  let thisUserWords = getThisUserWords();
   quizLength = thisUserWords.length > 10 ? 40 : 15;
   let array = [];
   for (word of thisUserWords) {
